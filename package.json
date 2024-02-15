@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "fs": "^0.0.1-security",
+    "readline": "^1.3.0",
+    "toml": "^3.0.0",
+    "websocket": "^1.0.34"
+  },
+  "name": "corebot",
+  "version": "1.3.1-dev",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gunawan092w/cvmbot.git"
+  },
+  "author": "gunawan092w",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gunawan092w/cvmbot/issues"
+  },
+  "homepage": "https://github.com/gunawan092w/cvmbot#readme",
+  "description": ""
+}
