@@ -129,23 +129,27 @@ function Client() {
 				
 				if (command == prefix + "reboot") {
 					wsclient.sendUTF(encode(["admin", "10", config.cvmbot.vmname]))
+					console.log(encode(["admin", "10", config.cvmbot.vmname]))
 				}
 				
 				if (command == prefix + "turntest") {
 					chat("take turn!");
-					wsclient.sendUTF(encode["turn", "1"]);
+					//wsclient.sendUTF(encode['turn', '1']);
+					wsclient.sendUTF("5.admin,2.20;");
 				}
 				
 				if (command == prefix + "keyboard") {
 					chat("Type: 'Test'")
-					wsclient.sendUTF("4.turn,1.1");
-					wsclient.sendUTF("3.key,3.116,1.0;") //t
-					wsclient.sendUTF("3.key,3.101,1.0;") //e
-					wsclient.sendUTF("3.key,3.115,1.0;") //s
-					wsclient.sendUTF("3.key,3.116,1.0;") //t
+					wsclient.sendUTF("3.key,3.116,1.1;") //t
+					wsclient.sendUTF("3.key,3.101,1.1;") //e
+					wsclient.sendUTF("3.key,3.115,1.1;") //s
+					wsclient.sendUTF("3.key,3.116,1.1;") //t
+				}
+				
+				if (command == prefix + "disturn") {
+					chat("leaving turn");
 					wsclient.sendUTF("4.turn,1.0;")
 				}
-			
 			};
 		});
        
@@ -160,6 +164,7 @@ function Client() {
 		  chat("CoreBot-Discord Initialized. Version: " + config.dcbot.ver + " Build Date: " + config.dcbot.builddate);
           chat("To view list of commands, type 'g!help' !")
 		  chat("CoreBot-Discord is under heavy development! Expect bugs and glitches. Report if there's an error.")
+		  //chat("ERR! Could not login as admin! Quitting...");
 		  wsclient.sendUTF(encode(["chat", "0", "corebot, testing"]));
         }
     });
