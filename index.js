@@ -1,37 +1,38 @@
 // Created by Gunawan092w
-// Inspired by CollabVM-Unofficial@YandereBot
+// https://github.com/gunawan092w/cvmbot/
 
 var WebSocketClient = require('websocket').client;
 var toml = require('toml');
 var fs = require('fs')
 var config = toml.parse(fs.readFileSync('./config.toml', 'utf-8'));
+const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
 
-var dcbot = require('./cvmbotdc.js');
+//var dcbot = require('./cvmbotdc.js');
 
-function chkifready(message) {
-	if (message === "botready") { Client() }
-}
+//function chkifready(message) {
+//	if (message === "botready") { Client() }
+//}
 
-dcbot.login(chkifready);
+//dcbot.login(chkifready);
 
 // Client Functionality - it's just basically a Websocket client stuff.
 function Client() {
 	
 	function retry() {
-		setTimeout(function() { }, 600); // Retry after 0.6s	
+				
 	}
 	
     var ws = new WebSocketClient();
-    console.log('Trying to connect FunVM1...');
+    console.log('Connecting to VM...');
 	
     // If the connection failed, it will send a message and logs the error to console.
     ws.on('connectFailed', function(error) {
-		 console.log('Failed to connect to FunVM. Check your connection and try again.');
+		 console.log(`Can't reach to VM! Please check your connection`);
     });
     // Bot connected to VM!
     ws.on('connect', function(wsclient) {
-        console.log('Bot Connected to FunVM1!');
-		dcbot.msgconnected();
+        console.log('Connected to VM!');
+		//dcbot.msgconnected();
 		
 		wsclient.sendUTF(encode(['rename', config.cvmbot.username])); // Bot sets the username
 		wsclient.sendUTF(encode(['admin', '2', config.cvmbot.adminpass])); // Bot logins as admin
@@ -51,19 +52,21 @@ function Client() {
 
         // If the connection was closed or disconnected, it will send a message to console regarding that the connection was closed.
         wsclient.on('close', function() {
-            console.log('Connection to FunVM1 was Closed.');
+            console.log(`I've been disconnected! Reconnecting...`);
             retry()
         });
 
-		const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
 		function chatapp() {
-			rl.question('Chat: ', (usrmsg) => { xss(usrmsg); chatapp() });
+			rl.question('Chat: ', (usrmsg) => { chat(usrmsg); chatapp() });
 		} chatapp()
         
 		wsclient.on('message', function(message) {
             var cmd = decode(message.utf8Data); // Decodes the command into UTF-8
-			var prefix = "g!"
+			var prefix = config.cvmbot.prefix;
             var command = cmd[2];
+			var i = 1; i < cmd.Length; i += 3
+			var vmname = cmd[i+1];
+			//console.log("VM Name: " + cmd[i]);
 		    
 			//console.log("1: " + cmd[1])
 			//if (typeof cmd[2] !== "undefined") {
@@ -74,17 +77,17 @@ function Client() {
 			//}
 			if (cmd[0] === "adduser") {
 				console.log(cmd[2] + " Joined the VM!");
-				dcbot.chatlog(cmd[2] + " Joined the VM");
+				//dcbot.chatlog(cmd[2] + " Joined the VM");
 				chat(cmd[2] + " Joined!");
 			}
 			if (cmd[0] === "remuser") {
 				console.log(cmd[2] + " Left the VM!")
-				dcbot.chatlog(cmd[2] + " Left the VM");
+				//dcbot.chatlog(cmd[2] + " Left the VM");
 				chat(cmd[2] + " Left")
 			}
 			if (cmd[1] !== "1" && typeof cmd[2] !== "undefined" && cmd[1] !== "0" && cmd[2] !== "0" && cmd[1] !== "2" ) {
 				console.log(cmd[1] + " says: " + cmd[2]);
-				dcbot.chatlog(cmd[1] + " says: " + cmd[2]);
+				//dcbot.chatlog(cmd[1] + " says: " + cmd[2]);
 			}
 
 			function disabled() {
@@ -92,7 +95,7 @@ function Client() {
 			}
             if (cmd[0] == 'chat') {
 				if (command == prefix + "help") {
-       				chat('Command Available: g!test, g!ask');
+       				chat('Help is not available, Go away. i mean the only command is `test`. so what?');
                 }
 				
 				if (command == prefix + "xsstest") {
@@ -103,30 +106,10 @@ function Client() {
                 
 				if (command == prefix + "test") {
 					if (config.cvmcmd.test === "true") {
-						chat('This is a test! Yes. a fking test from me writing this code from scratch');
+						chat(`hey, you've reached the idiotics. bye`);
 					} else ( disabled() )
 				}	
                 
-				if (command == prefix + "ask") {
-					if (config.cvmcmd.ask === "true") {
-	            		const OpenAI = require('openai');
-						const openai = new OpenAI({ apiKey: '' });
-						async function aiask() {
-                 			const trimaskcommand = command.substring(prefix.length + 'ask'.length + 1).trim();
-		      				const completion = await openai.chat.completions.create({ 
-								messages: [ 
-									{role: "system", content: "You are a helpful assistant."}, 
-									{role: "user", content: trimaskcommand } 
-								], model: "gpt-3.5-turbo",
-							}); 
-		      				xss(completion.choices[0].message.content)
-							} aiask(); 
-					//chat("This command has been disabled.")
-					} else {
-						disabled()
-					}
-                }
-				
 				if (command == prefix + "reboot") {
 					wsclient.sendUTF(encode(["admin", "10", config.cvmbot.vmname]))
 					console.log(encode(["admin", "10", config.cvmbot.vmname]))
@@ -139,7 +122,7 @@ function Client() {
 				}
 				
 				if (command == prefix + "keyboard") {
-					chat("Type: 'Test'")
+					chat("Typing: 'Test'")
 					wsclient.sendUTF("3.key,3.116,1.1;") //t
 					wsclient.sendUTF("3.key,3.101,1.1;") //e
 					wsclient.sendUTF("3.key,3.115,1.1;") //s
@@ -150,30 +133,45 @@ function Client() {
 					chat("leaving turn");
 					wsclient.sendUTF("4.turn,1.0;")
 				}
+				
+				if (command == prefix + "logofffag") {
+					chat("Alright! i'm going to be annoying for the next 20 seconds!")
+					wsclient.sendUTF("5.admin,2.20;"); // bypass turn
+					wsclient.sendUTF("3.key,5.65507,1.1;"); // hold ctrl
+					wsclient.sendUTF("3.key,5.65513,1.1;"); // hold shift
+					wsclient.sendUTF("3.key,5.65535,1.1;"); // hold esc
+					wsclient.sendUTF("3.key,5.65535,1.0;"); // release esc
+					wsclient.sendUTF("3.key,5.65535,1.0;"); // release shift
+					wsclient.sendUTF("3.key,5.65535,1.0;"); // release ctrl
+					function hitlogoff() {
+						wsclient.sendUTF("5.mouse,3.485,3.318,1.0;");
+						console.log("1");
+						wsclient.sendUTF("5.mouse,3.485,3.318,1.1;");
+						console.log("2");
+						wsclient.sendUTF("5.mouse,3.485,3.318,1.0;");
+						console.log("3");
+					}; setTimeout(hitlogoff(), 3000); // 3s	
+				}
 			};
 		});
        
 	    
-		// Sends heartbeat to prevent inactivity..
+		// Sends heartbeats
         setInterval(function() { if (wsclient.connected) { wsclient.sendUTF('3.nop;'); }}, 2500); 
 
         // Startup message if Bot joined to VM
         if (wsclient.connected) {
-			
-      	  chat("Corebot Initialized. Version: " + config.cvmbot.ver + " Build Date: " + config.cvmbot.builddate);
-		  chat("CoreBot-Discord Initialized. Version: " + config.dcbot.ver + " Build Date: " + config.dcbot.builddate);
-          chat("To view list of commands, type 'g!help' !")
-		  chat("CoreBot-Discord is under heavy development! Expect bugs and glitches. Report if there's an error.")
+      	  //chat("Gunawan092w-BotJS v" + config.cvmbot.ver + " Build " + config.cvmbot.builddate);
+          chat(`A wild ${config.cvmbot.username} appeared!`)
+		  //chat("CoreBot-Discord Initialized. Version: " + config.dcbot.ver + " Build Date: " + config.dcbot.builddate);
+          //("CoreBot-Discord No longer in development.");
+		  //chat("CoreBot-Discord is under heavy development! Expect bugs and glitches. Report if there's an error.")
 		  //chat("ERR! Could not login as admin! Quitting...");
-		  wsclient.sendUTF(encode(["chat", "0", "corebot, testing"]));
+		  wsclient.sendUTF(encode(["chat", "0", "49112JS, testing"]));
         }
     });
-	
-    //
     ws.connect(config.cvmbot.ip, 'guacamole'); // Connects to the VM
-	
-}
-//Client(); // Calls Client
+}Client(); // Calls Client
 
 // A code to decode the commands into format cypher
 function decode(cypher) {
