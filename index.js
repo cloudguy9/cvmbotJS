@@ -53,7 +53,7 @@ function bot() {
 			const cmd = decode(message.utf8Data);
 			const action = cmd[0];
 			const prefix = config.bot.prefix;
-			console.log(cmd)
+			
 			if(action==="disconnect"){reconnect()}; // If Disconnect, Kill Websocket Session, Kill Chat Session and reconnects.
 			if(action==="nop"){client.sendUTF('3.nop;')}; // Send Heartbeat
 
