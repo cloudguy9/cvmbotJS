@@ -1,12 +1,6 @@
 {
-  "dependencies": {
-    "fs": "^0.0.1-security",
-    "readline": "^1.3.0",
-    "toml": "^3.0.0",
-    "websocket": "^1.0.35"
-  },
-  "name": "corebot",
-  "version": "1.4.0-dev",
+  "name": "cvmbotjs",
+  "version": "2.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,5 +15,10 @@
     "url": "https://github.com/gunawan092w/cvmbot/issues"
   },
   "homepage": "https://github.com/gunawan092w/cvmbot#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "readline": "^1.3.0",
+    "toml": "^3.0.0",
+    "websocket": "^1.0.35"
+  }
 }

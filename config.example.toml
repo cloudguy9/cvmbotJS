@@ -1,14 +1,10 @@
-[cvmbot]
-ip          = "ws://127.0.0.1:6009"
-vmname	    = "acoolvm"
-username    = "CoreBotJS"
-adminpass   = "hunter2"
-ver	    = "1.4.0-dev"
-builddate   = "2024.12.10"
-prefix      = "!"
+[bot]
+user	    = "cvmBotJS-v2" # Bot Username
+login	    = "hunter2" # Admin / Mod Password
+ip          = "ws://127.0.0.1:6004" # Websocket VM Endpoint
+prefix	    = "j?" # Command Prefix
 
-[cvmcmd]
-ask 		= "true"
-help 		= "true"
-test 		= "true"
-xsstest 	= "true"
+[settings]
+login	    = "true" # Enable / Disable Bot Login
+startup     = "true" # Enable / Disable Startup message
+startupmsg  = "cvmBotJS-v2 appeared in chat! Prefix is: 'j?'" # Send message everytime bot connects to VM

@@ -1,0 +1,1 @@
+module.exports = function (chat, prefix) {chat(`This is a test!`)};
