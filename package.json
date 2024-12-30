@@ -7,14 +7,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gunawan092w/cvmbot.git"
+    "url": "git+https://github.com/gunawan092w/cvmbotJS.git"
   },
   "author": "gunawan092w",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gunawan092w/cvmbot/issues"
+    "url": "https://github.com/gunawan092w/cvmbotJS/issues"
   },
-  "homepage": "https://github.com/gunawan092w/cvmbot#readme",
+  "homepage": "https://github.com/gunawan092w/cvmbotJS#readme",
   "description": "",
   "dependencies": {
     "readline": "^1.3.0",

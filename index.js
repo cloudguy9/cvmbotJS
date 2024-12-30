@@ -1,5 +1,5 @@
 // cvmBotJS v2.0.0 [Sunday, December 29th, 2024]
-// By Gunawan092w [https://github.com/gunawan092w/cvmbot]
+// By Gunawan092w [https://github.com/gunawan092w/cvmbotJS]
 
 const WSClient = require('websocket').client;
 const toml = require('toml');
