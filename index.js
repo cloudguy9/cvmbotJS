@@ -1,4 +1,4 @@
-// cvmBotJS v2.0.0 [Sunday, December 29th, 2024]
+// cvmBotJS v2.0.1 [Wednesday, January 1st, 2025] [Happy-New-Year!]
 // By Gunawan092w [https://github.com/gunawan092w/cvmbotJS]
 
 const WSClient = require('websocket').client;
@@ -6,6 +6,7 @@ const toml = require('toml');
 const fs = require('node:fs');
 const path = require('node:path');
 const rl = require('readline') // I hate you.
+const Permissions = require('./files/Permissions.js')
 
 const config = toml.parse(fs.readFileSync('./config.toml', 'utf-8'));
 const prefix = config.bot.prefix;
@@ -14,14 +15,16 @@ const Client = new WSClient();
 
 // Loads all commands in commands folder
 let command = {};
-fs.readdirSync('./commands').forEach(file => {
+
+fs.readdirSync('./files/commands').forEach(file => {
     if (file.endsWith('.js')) {
         const cmdName = path.basename(file, '.js');
-        command[cmdName] = require(path.join(__dirname, 'commands', file));
+        command[cmdName] = require(path.join(__dirname, 'files', 'commands', file));
     } 
 }); 
 
-let readline = null;
+let readline;
+let permissions;
 function bot() {
 	Client.removeAllListeners(); // Removes remaining listener
 
@@ -37,11 +40,15 @@ function bot() {
 		
 		function chat(message){client.sendUTF(encode(['chat',message]))}; // The Chat Function
 		function xss(message){client.sendUTF(encode(["admin","21",message]))}; // Chat as XSS
-		function sendmsg(msg) {if (loggedin!=="false") {chat(msg)} else{xss(msg)}}; // for chat session k?
+		function sendmsg(msg) {
+			if (loggedin==="true") {
+				if(permissions.xss){xss(msg)}else{chat(msg)};
+			} else {chat(msg)}
+		}; // for chat session k?
 		
 		function chatsession() {readline.question('Chat: ',(usrmsg)=>{sendmsg(usrmsg);chatsession()})};chatsession(); // it Loooooops. 
 		
-		// Check if user disallow bot login
+		// Check if bot has been disallowed to login
 		let loggedin = "";
 		if (config.settings.login==="false"){
 			console.log("Not logging in as mod / admin."); loggedin = "false"
@@ -69,9 +76,16 @@ function bot() {
 			
 			// Detects if the bot is logged in as admin / mod or fails to login.
 			if(action==="admin"&&cmd[2]==='0'){console.log("Incorrect login password!");loggedin = "false"};
-			if(action==="admin"&&cmd[2]==='1'){console.log(" Logged in as Administrator! ");loggedin = "true"};
-			if(action==="admin"&&cmd[2]==='3'){console.log("   Logged in as Moderator!   ");loggedin = "true"};
-			
+			if(action==="admin"&&cmd[2]==='1'){console.log("Logged in as Administrator!");loggedin = "true"};
+			if(action==="admin"&&cmd[2]==='3'){
+				console.log("Logged in as Moderator!");
+				loggedin = "true";
+				// Check Moderator Permissions
+				permissions = new Permissions(cmd[3]);
+				console.log(permissions) // Outputs permissions of moderator that has been set on backend (as JSON)
+				module.exports = {permissions}
+			};
+
 			if(action==="chat"){
 				if(cmd[2] !=="") {
 					// https://github.com/computernewb/collabvm-1.2.ts/blob/master/cvmts/src/Utilities.ts Line 26
@@ -84,7 +98,7 @@ function bot() {
 				
 				const cmdName = cmd[2].slice(prefix.length).trim().split(' ')[0];
                 if(cmd[1]!==config.bot.user){ // Ignore bot messages
-					if (cmd[2].startsWith(prefix) && command[cmdName]){ command[cmdName](chat, prefix, xss, cmd)};
+					if (cmd[2].startsWith(prefix) && command[cmdName]){ command[cmdName](chat, xss, prefix)};
 				}; 
 			}
 		});
@@ -97,8 +111,8 @@ function reconnect() {
 	console.log("Reconnecting..."); bot(); // Calls the bot() again
 }
 
-function retry() { if (readline) { readline.close(); readline = null}; bot()}
-function start() { console.log('Connecting to VM...'); bot(); } start(); // Start the bot!
+function retry() { if (readline) { readline.close(); readline = null};bot() }
+function start() {console.log('Connecting to VM...'); bot()} start(); // Start the bot!
 
 function decode(cypher) {
     var sections = []; var bump = 0;
@@ -121,49 +135,3 @@ process.on('SIGINT', () => {
     console.log('\nKilling Bot Session...');
     if (readline) readline.close(); process.exit(0);
 });
-
-
-// Notes of me going crazy about it. - Gunawan092w
-//
-// [Saturday, December 22th, 2024]
-// 1. The day that i start rewritting this code. 
-// 2. I got no life. Just to make this active, i'm just gonna keep making this project active as possible lol.
-// 3. Copied some of my old code kinda helped.
-// 
-// [Sunday, December 23th, 2024]
-// 1. I'm thinking about making commands in a folder. 
-// 2. Without thinking, i literally copied some code from discord.js v14 guide page lmao (it was loading commands thing). Yeah that kinda sucked
-// 3. Asked GPT on how to do this but yeah it only made it worse.
-// 4. Luckily i used my -100 IQ brain to think and ye it works!
-// 5. Created my commands (which is help, test) and it works!
-// 6. ...
-// 7. Next thing i got an idea was for the help command, what if i make it fetch all commands in the commands folder? (Commands available: [all commmands in the folder here])
-// 8. Great idea! But to keep my brain not fried, i just simply copied the code from here (Line 12 - 18) and yeah it works. I couldn't think any alternative ways soo...
-//
-// [Tuesday, December 25th, 2024]
-// 1. At first my idea was to check which permission does moderator has, but i completely give up.
-// 2. Still can't figure out how to make reconnect function stuff ugh.
-//
-// [Wednesday, December 26th, 2024]
-// 1. Figured out how to make the reconnect thing.
-// 2. By calling bot(); again, HAHA!
-// 3. Okay one problem. Readline was not closed. So i used kill function and works :thumbs_up:
-//
-// [Friday, December 27th, 2024]
-// 1. Error [ERR_USE_AFTER_CLOSE]: readline was closed (I LOVE YOU BRO)
-// 2. Okay i thought of it and what if i make a new function with the kill prompt in it?
-// 3. So i created new function called chatsession(). with the createinterface, questions and done. 
-// 4. The way it works is that it first calls chatsession(). And then i kill it by calling rlkill(). Then after it reconnects, it calls chatsession() and now it works!
-// 5. I can finally reuse the rlkill after it's session killed lolllll
-// 6. But one big problem. There were duplicates of listeners. I couldn't figure out why it keeps doubling. 
-// 
-// [Saturday, December 28, 2024]
-// 1. Found out that existing listener has not yet closed, which it will keep doubling when calling bot() to reconnect. 
-// 2. So to fix this, i added Client.removeAllListeners(); to prevent any duplicates Listeners.
-// 
-// [Sunday, December 29, 2024]
-// 1. The day it's published to github!!!!
-// 2. Although there was a leftover listener that i thought i removed it but it still shows "MaxListenersExceededWarning: 11 error,close,handler listeners added to [ReadStream]"
-// 3. Maybe it'll be fixed in the next version :D
-//
-////////////////////////////////////
