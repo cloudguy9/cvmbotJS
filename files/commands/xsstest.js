@@ -1,7 +1,5 @@
-module.exports = function (chat, xss, prefix) {
+module.exports = function (chat, xss, prefix, cmd) {
     const {permissions} = require('../../index.js');
-    xss(`hi`);
-    console.log(permissions.xss);
     if (permissions.xss) {
         xss('<h3>XSS Test Success!</h3>')
     } else {
