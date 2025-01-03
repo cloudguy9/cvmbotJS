@@ -1,9 +1,3 @@
-const cmddesc = {
-    number: "Gives you random number of specified two between numbers.",
-    help: "Sends a minimal list of available commands",
-    test: "Sends a test message",
-    xsstest: "Sends a test XSS Message if the bot has the permission to do so." 
-}
 const toml = require('toml');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -19,16 +13,20 @@ fs.readdirSync('./files/commands').forEach(file => {
     } 
 }); 
 
-module.exports = function (chat, xss, prefix, cmd) {
-    cmdname = cmd[2].slice(prefix.length).trim().split(' ')[0];
-    const args = cmd[2].trim().split(' ');
-
-    if (args[0] === `${prefix}help`) {
+module.exports = {
+    desc: 'Sends a minimal list of available commands',
+    async execute(chat, xss, prefix, cmd) {
+        cmdname = cmd[3].slice(prefix.length).trim().split(' ')[0];
+        const args = cmd[2].trim().split(' ');
+        
+        console.log(args)
         if(args.length===1){
             chat(`My prefix is "${prefix}" ! Available Commands: ${Object.keys(command).join(', ')}`);
             chat(`Do ${prefix}help  for more info!`);
         } else if(args.length===2){
-          chat(cmddesc[args[1]])
+            if (command[args[1]].desc) {
+                chat(command[args[1]].desc)
+            } else {chat(`Oops, ${args[1]} doesn't have a description set.`)}
         }
-      }
-};
+    }
+}

@@ -1,4 +1,4 @@
-// cvmBotJS v2.0.2 [Thursday, January 2nd, 2025]
+// cvmBotJS v2.0.3 [Thursday, January 3rd, 2025]
 // By Gunawan092w [https://github.com/gunawan092w/cvmbotJS]
 
 const WSClient = require('websocket').client;
@@ -33,25 +33,27 @@ function bot() {
 	readline = rl.createInterface({input: process.stdin, output: process.stdout});
 	
 	Client.on('connect', client => {
-		client.sendUTF(encode(['rename',config.bot.user])); // Bot sets Username
+		function send(msg){client.sendUTF(msg)}
 		console.log(`Connected to VM!`); // Success!
+		send(encode(['rename',config.bot.user])); // Bot sets Username
 		
-		function chat(message){client.sendUTF(encode(['chat',message]))}; // Chat Function
-		function xss(message){client.sendUTF(encode(["admin","21",message]))}; // Chat as XSS
-		
-		function sendmsg(msg) {
-			if (loggedin==="true") {
-				if(permissions.xss){xss(msg)}else{chat(msg)};
-			} else {chat(msg)}
-		}; // for chat session k?
-		function chatsession() {readline.question('Chat: ',(usrmsg)=>{sendmsg(usrmsg);chatsession()})};chatsession(); // it Loooooops. 
+		function chat(message){send(encode(['chat',message]))}; // Chat
+		function xss(message){send(encode(["admin","21",message]))}; // XSS
+		function chatsession() {
+			readline.question('Chat: ',(msg)=>{
+				if (botrole==="mod") {
+					if (permissions.xss){xss(msg)} else(chat(msg));
+				} else if (botrole==="admin"){xss(msg)} else{chat(msg)};
+				chatsession(); // In loop.
+			})
+		}; chatsession();
 		
 		// Check if bot has been disallowed to login
-		let loggedin = "";
+		let botrole;
 		if (config.settings.login==="false"){
-			console.log("Not logging in as mod / admin."); loggedin = "false"
-		} else{client.sendUTF(encode(['admin','2',config.bot.login]))}
-		
+			console.log("Not logging in as mod / admin."); botrole="null"
+		} else{send(encode(['admin','2',config.bot.login]))} // If not, Bot proceeds to log in
+
 		if (config.settings.startup==="true") {if(client.connected){chat(config.settings.startupmsg)}}; // Startup Message. Enable/Disable in Config.
 
 		client.on('message', message =>{
@@ -60,7 +62,7 @@ function bot() {
 			const prefix = config.bot.prefix;
 			
 			if(action==="disconnect"){reconnect()}; // If Disconnect, Kill Websocket Session, Kill Chat Session and reconnects.
-			if(action==="nop"){client.sendUTF('3.nop;')}; // Send Heartbeat
+			if(action==="nop"){send(encode(['nop']))}; // Send Heartbeat
 
 			if (action==="adduser") {
 				if (cmd[2]!==config.bot.user) { // (Bot Ignored)
@@ -74,13 +76,13 @@ function bot() {
 			
 			// Detects if the bot is logged in as admin / mod or fails to login.
 			if (action==="admin") {
-				if (cmd[2]==='0'){console.log("Incorrect login password!");loggedin = "false"};
-				if (cmd[2]==='1'){console.log("Logged in as Administrator!");loggedin = "true"};
+				if (cmd[2]==='0'){console.log("Incorrect login password!");botrole = "null"};
+				if (cmd[2]==='1'){console.log("Logged in as Administrator!");botrole = "admin"};
 				if (cmd[2]==='3'){
-					console.log("Logged in as Moderator!"); loggedin = "true";
+					console.log("Logged in as Moderator!"); botrole = "mod";
 					permissions = new Permissions(cmd[3]); // Check Moderator Permissions
 					console.log(permissions); // Outputs Moderator Permissions [true/false] (as JSON)
-					module.exports = {permissions};
+					module.exports = {permissions, botrole};
 				}
 			}
 
@@ -96,9 +98,13 @@ function bot() {
 				
 				const cmdName = cmd[2].slice(prefix.length).trim().split(' ')[0];
                 if(cmd[1]!==config.bot.user){ // Ignore bot messages
-					if (cmd[2].startsWith(prefix) && command[cmdName]){command[cmdName](chat, xss, prefix, cmd)};
+					if (cmd[2].startsWith(prefix) && command[cmdName]){
+						if (command[cmdName].execute) {
+							command[cmdName].execute(chat, xss, prefix, cmd);
+						}else { chat(`It looks like ${cmdName} doesn't have 'execute' property set!`) };
+					};
 				}; 
-			}
+			};
 		});
 	});
 	Client.connect(config.bot.ip, 'guacamole'); // Bot connects to VM
