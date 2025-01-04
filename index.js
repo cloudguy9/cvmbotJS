@@ -64,8 +64,8 @@ function bot() {
 			if(action==="disconnect"){reconnect()}; // If Disconnect, Kill Websocket Session, Kill Chat Session and reconnects.
 			if(action==="nop"){send(encode(['nop']))}; // Send Heartbeat
 
-			if (action==="adduser") {
-				if (cmd[2]!==config.bot.user) { // (Bot Ignored)
+			if (action==="adduser") { 
+				if (cmd[2]!==config.bot.user&&cmd[1]==="1") { // (Bot Ignored)
 					if (cmd[3]==='0'){console.log(`${cmd[2]} Joined!`)}; // Logs User Joins. 
 					if (cmd[3]==='2'){console.log(`${cmd[2]} is now Administrator!`)}; // Logs User logged in as Administrator
 					if (cmd[3]==='3'){console.log(`${cmd[2]} is now Moderator!`)} // Logs user logged in as Moderator
