@@ -16,9 +16,7 @@ fs.readdirSync('./files/commands').forEach(file => {
 module.exports = {
     desc: 'Sends a minimal list of available commands',
     async execute(chat, xss, prefix, cmd) {
-        cmdname = cmd[3].slice(prefix.length).trim().split(' ')[0];
         const args = cmd[2].trim().split(' ');
-
         if(args.length===1){
             chat(`My prefix is "${prefix}" ! Available Commands: ${Object.keys(command).join(', ')}`);
             chat(`Do ${prefix}help  for more info!`);

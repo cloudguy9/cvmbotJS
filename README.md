@@ -12,3 +12,9 @@ Licensed in [**GNU GENERAL PUBLIC LICENSE Version 3 (GPL-3.0-or-later)**](https:
 
 # CollabVM Version
 This bot only works with [CollabVM Server 1.2.ts](https://github.com/computernewb/collabvm-1.2.ts)!
+
+# Code from other sources
+All code that i've taken from other sources has been labeled in JS Files.
+1. /files/Permissions.js - [collab-vm-1.2.webapp/src/ts/protocol/Permissions.ts](https://github.com/computernewb/collab-vm-1.2-webapp/blob/master/src/ts/protocol/Permissions.ts)
+2. /files/Guacutils.js - [collab-vm-1.2.webapp/src/ts/protocol/Guacutils.ts](https://github.com/computernewb/collab-vm-1.2-webapp/blob/master/src/ts/protocol/Guacutils.ts)
+3. /index.js:93 - [collabvm-1.2.ts/cvmts/src/Utilities.ts:26](https://github.com/computernewb/collabvm-1.2.ts/blob/master/cvmts/src/Utilities.ts)

@@ -5,8 +5,10 @@ const WSClient = require('websocket').client;
 const toml = require('toml');
 const fs = require('node:fs');
 const path = require('node:path');
-const rl = require('readline')
-const Permissions = require('./files/Permissions.js')
+const rl = require('readline');
+
+const Permissions = require('./files/Permissions.js');
+const {encode, decode} = require('./files/Guacutils.js');
 
 const config = toml.parse(fs.readFileSync('./config.toml', 'utf-8'));
 const prefix = config.bot.prefix;
@@ -123,22 +125,3 @@ process.on('SIGINT', () => {
     console.log('\nKilling Bot Session...');
     if (readline) readline.close(); process.exit(0);
 });
-
-function decode(cypher) {
-    var sections = []; var bump = 0;
-    while (sections.length <= 50 && cypher.length >= bump) {
-		var current = cypher.substring(bump);
-        var length = parseInt(current.substring(current.search(/\./) - 2));
-        var paramater = current.substring(length.toString().length + 1, Math.floor(length / 10) + 2 + length);
-        sections[sections.length] = paramater; bump += Math.floor(length / 10) + 3 + length;
-    } sections[sections.length - 1] = sections[sections.length - 1].substring(0, sections[sections.length - 1].length - 1);return sections
-}
-
-function encode(cypher) {
-    let command = "";
-    for (var i = 0; i < cypher.length; i++) {
-		let current = cypher[i]; 
-		command += current.length + "." + current; 
-		command += i < cypher.length - 1 ? "," : ";"
-	} return command;
-}
