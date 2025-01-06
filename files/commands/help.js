@@ -1,6 +1,7 @@
 const toml = require('toml');
 const fs = require('node:fs');
 const path = require('node:path');
+const { error } = require('node:console');
 
 const config = toml.parse(fs.readFileSync('./config.toml', 'utf-8'));
 const prefix = config.bot.prefix;
@@ -14,18 +15,22 @@ fs.readdirSync('./files/commands').forEach(file => {
 }); 
 
 module.exports = {
-    desc: 'Sends a minimal list of available commands',
+    desc: 'Sends a minimal list of available commands', // Added in v2.0.2 (Later updated in v2.0.3 + it's better)
     async execute(chat, xss, prefix, cmd) {
-        const args = cmd[2].trim().split(' ');
-        if(args.length===1){
-            chat(`My prefix is "${prefix}" ! Available Commands: ${Object.keys(command).join(', ')}`);
-            chat(`Do ${prefix}help  for more info!`);
-        } else if(args.length===2){
-            if (command[args[1]]) {
-                if (command[args[1]].desc) {
-                    chat(command[args[1]].desc)
-                } else {chat(`Oops, ${args[1]} doesn't have a description set.`)}
+        const args = cmd[2].trim().split(' '); 
+        try {
+            if(args.length===1){ // If user did not request for command's description
+                chat(`My prefix is "${prefix}" ! Available Commands: ${Object.keys(command).join(', ')}`);
+                chat(`Do ${prefix}help  for more info!`);
+            } else if(args.length===2){ // If user requests for command's description
+                if (command[args[1]]) { // This was fixed in v2.0.4 - Where user tries to request a command that doesn't exists.
+                    if (command[args[1]].desc) { // If the command has description set
+                        chat(command[args[1]].desc)
+                    } else {chat(`Oops, ${args[1]} doesn't have a description set.`)} // If not.
+                }
             }
+        } catch(error) { // Catch error!
+            chat (`Something went wrong, check console for more details.`); console.log(error); // If the bot encounter an error, error logs will be outputted to console without crashing the bot.
         }
     }
 }

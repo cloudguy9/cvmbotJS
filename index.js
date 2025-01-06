@@ -1,5 +1,4 @@
-// cvmBotJS v2.0.3 [Thursday, January 3rd, 2025]
-// By Gunawan092w [https://github.com/gunawan092w/cvmbotJS]
+// cvmBotJS by Gunawan092w [https://github.com/gunawan092w/cvmbotJS]
 
 const WSClient = require('websocket').client;
 const toml = require('toml');
@@ -35,7 +34,8 @@ function bot() {
 	readline = rl.createInterface({input: process.stdin, output: process.stdout});
 	
 	Client.on('connect', client => {
-		function send(msg){client.sendUTF(msg)}
+		function send(msg){client.sendUTF(msg)} // Added in v2.0.3 - easier rather than typing client.sendUTF
+
 		console.log(`Connected to VM!`); // Success!
 		send(encode(['rename',config.bot.user])); // Bot sets Username
 		
@@ -62,12 +62,12 @@ function bot() {
 			const cmd = decode(message.utf8Data);
 			const action = cmd[0];
 			const prefix = config.bot.prefix;
-			
+			console.log(cmd)
 			if(action==="disconnect"){reconnect()}; // If Disconnect, Kill Websocket Session, Kill Chat Session and reconnects.
 			if(action==="nop"){send(encode(['nop']))}; // Send Heartbeat
 
 			if (action==="adduser") { 
-				if (cmd[2]!==config.bot.user&&cmd[1]==="1") { // (Bot Ignored)
+				if (cmd[2]!==config.bot.user&&cmd[1]==="1") { // Bot ignored + Only filter 1 user (v2.0.4)
 					if (cmd[3]==='0'){console.log(`${cmd[2]} Joined!`)}; // Logs User Joins. 
 					if (cmd[3]==='2'){console.log(`${cmd[2]} is now Administrator!`)}; // Logs User logged in as Administrator
 					if (cmd[3]==='3'){console.log(`${cmd[2]} is now Moderator!`)} // Logs user logged in as Moderator
@@ -84,7 +84,7 @@ function bot() {
 					console.log("Logged in as Moderator!"); botrole = "mod";
 					permissions = new Permissions(cmd[3]); // Check Moderator Permissions
 					console.log(permissions); // Outputs Moderator Permissions [true/false] (as JSON)
-					module.exports = {permissions, botrole};
+					module.exports = {permissions, botrole}; // Can be used for other admin / mod commands to check the bot's permission.
 				}
 			}
 
@@ -106,6 +106,12 @@ function bot() {
 						}else { chat(`It looks like ${cmdName} doesn't have 'execute' property set!`) };
 					};
 				}; 
+			};
+			
+			if (action==='list') { // For vminfo command. You may remove this code if you don't want this command.
+				const vmname = cmd[1];
+				const vmdesc = cmd[2];
+				module.exports = {vmname, vmdesc};
 			};
 		});
 	});
