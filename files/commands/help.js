@@ -1,7 +1,6 @@
 const toml = require('toml');
 const fs = require('node:fs');
 const path = require('node:path');
-const { error } = require('node:console');
 
 const config = toml.parse(fs.readFileSync('./config.toml', 'utf-8'));
 const prefix = config.bot.prefix;
@@ -16,9 +15,9 @@ fs.readdirSync('./files/commands').forEach(file => {
 
 module.exports = {
     desc: 'Sends a minimal list of available commands', // Added in v2.0.2 (Later updated in v2.0.3 + it's better)
-    async execute(chat, xss, prefix, cmd) {
-        const args = cmd[2].trim().split(' '); 
+    async execute(chat, xss, cmd) {
         try {
+            const args = cmd[2].trim().split(' '); 
             if(args.length===1){ // If user did not request for command's description
                 chat(`My prefix is "${prefix}" ! Available Commands: ${Object.keys(command).join(', ')}`);
                 chat(`Do ${prefix}help  for more info!`);

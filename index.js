@@ -6,8 +6,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const rl = require('readline');
 
-const Permissions = require('./files/Permissions.js');
-const {encode, decode} = require('./files/Guacutils.js');
+const Permissions = require('./files/utils/Permissions.js');
+const {encode, decode} = require('./files/utils/Guacutils.js');
 
 const config = toml.parse(fs.readFileSync('./config.toml', 'utf-8'));
 const prefix = config.bot.prefix;
@@ -38,7 +38,8 @@ function bot() {
 
 		console.log(`Connected to VM!`); // Success!
 		send(encode(['rename',config.bot.user])); // Bot sets Username
-		
+		send(encode(['list'])); // It appears this were not pushed to github (v2.0.6).
+
 		function chat(message){send(encode(['chat',message]))}; // Chat
 		function xss(message){send(encode(["admin","21",message]))}; // XSS
 		function chatsession() {
@@ -84,8 +85,9 @@ function bot() {
 					console.log("Logged in as Moderator!"); botrole = "mod";
 					permissions = new Permissions(cmd[3]); // Check Moderator Permissions
 					console.log(permissions); // Outputs Moderator Permissions [true/false] (as JSON)
-					module.exports = {permissions, botrole}; // Can be used for other admin / mod commands to check the bot's permission.
+					module.exports = {permissions}; // Can be used for other admin / mod commands to check the bot's permission.
 				}
+				module.exports = {botrole}; // xsstest was not working when the bot is administrator.
 			}
 
 			if(action==="chat"){
@@ -102,7 +104,7 @@ function bot() {
                 if(cmd[1]!==config.bot.user){ // Ignore bot messages
 					if (cmd[2].startsWith(prefix) && command[cmdName]){
 						if (command[cmdName].execute) {
-							command[cmdName].execute(chat, xss, prefix, cmd);
+							command[cmdName].execute(chat, xss, cmd);
 						}else { chat(`It looks like ${cmdName} doesn't have 'execute' property set!`) };
 					};
 				}; 

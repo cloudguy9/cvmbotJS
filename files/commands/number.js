@@ -1,6 +1,6 @@
 module.exports = {
     desc: 'Sends a random number with two numbers given by user',
-    async execute(chat, xss, prefix, cmd) {
+    async execute(chat, xss, cmd) {
         const args = cmd[2].trim().split(' ');
         const min = parseInt(args[1]);
         const max = parseInt(args[2]);

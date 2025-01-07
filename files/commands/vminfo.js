@@ -1,5 +1,5 @@
 module.exports = {
-    desc: "Sends VMName, and VM Description.",
+    desc: "View information of this VM.",
     async execute(chat) {
         const {vmname, vmdesc} = require('../../index.js');
         chat(`Name: ${vmname}`);
