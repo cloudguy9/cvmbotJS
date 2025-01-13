@@ -20,6 +20,6 @@ All code that i've taken from other sources has been labeled in JS Files.
 3. /index.js:93 - [collabvm-1.2.ts/cvmts/src/Utilities.ts:26](https://github.com/computernewb/collabvm-1.2.ts/blob/master/cvmts/src/Utilities.ts)
 
 # Versions
-Stable: v2.0.5
-Latest: v2.0.6a
-Note: I recommend you to use stable version. Latest are not considered to be fully stable yet!
+- Stable: v2.0.5
+- Latest: v2.0.6a
+- Note: I recommend you to use stable version. Latest are not considered to be fully stable yet!
