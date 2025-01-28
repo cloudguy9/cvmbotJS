@@ -1,5 +1,5 @@
 [bot]
-user	    = "cvmBotJS-v2" # Bot Username
+user	    = "cvmBotJS" # Bot Username
 login	    = "hunter2" # Admin / Mod Password
 ip          = "ws://127.0.0.1:6004" # Websocket VM Endpoint
 prefix	    = "j?" # Command Prefix
@@ -7,4 +7,5 @@ prefix	    = "j?" # Command Prefix
 [settings]
 login	    = "true" # Enable / Disable Bot Login
 startup     = "true" # Enable / Disable Startup message
-startupmsg  = "cvmBotJS-v2 appeared in chat! Prefix is: 'j?'" # Send message everytime bot connects to VM
+startupmsg  = "cvmBotJS appeared in chat! Prefix is: 'j?'" # Send Startup Message
+debug       = "false" # Enable / Disable websocket message logging

@@ -20,12 +20,12 @@ module.exports = {
             const args = cmd[2].trim().split(' '); 
             if(args.length===1){ // If user did not request for command's description
                 chat(`My prefix is "${prefix}" ! Available Commands: ${Object.keys(command).join(', ')}`);
-                chat(`Do ${prefix}help  for more info!`);
+                chat(`Do ${prefix}help [command] for more info!`);
             } else if(args.length===2){ // If user requests for command's description
                 if (command[args[1]]) { // This was fixed in v2.0.4 - Where user tries to request a command that doesn't exists.
                     if (command[args[1]].desc) { // If the command has description set
                         chat(command[args[1]].desc)
-                    } else {chat(`Oops, ${args[1]} doesn't have a description set.`)} // If not.
+                    } else {chat(`${args[1]} doesn't have a description`)} // If not.
                 }
             }
         } catch(error) { // Catch error!

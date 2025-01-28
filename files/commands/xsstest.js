@@ -2,7 +2,7 @@ const msg = "<h3>XSS Test Success!</h3>";
 module.exports = {
     desc: 'Sends a test xss message',
     async execute(chat, xss, cmd) {
-        const {permissions, botrole} = require('../../index.js'); // Mentioned in index.js Line 87
+        const {permissions, botrole} = require('../../index.js');
         if (botrole === 'mod') {
             if (permissions.xss) { xss(msg) } // Checks if Bot has permission to send XSS.
             else {chat("Sorry, i don't have permission to peform this task.")} // Only if the server doesn't allow mods to have perm to send XSS.
