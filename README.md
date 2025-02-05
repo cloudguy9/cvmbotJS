@@ -1,14 +1,33 @@
 # cvmbotJS
 A CollabVM Bot written in Javascript
 
+## Dependencies
+cvmbotJS requires the following dependency to be installed onto your computer:
+1. nodeJS (Required - LTS Recommended)
+2. that's all :3
+
+### Installing NodeJS (for Linux users)
+1. Execute command by doing:
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+nvm install 22
+```
+2. Verify Node.JS and NPM is installed on your computer by executing these commands:
+```bash
+node -v # Prints out Node.JS version
+npm -v  # Prints out NPM Version
+```
+
 # How to run
-1. Copy `config.example.toml` -> `config.toml`
-2. Edit the configuration
-3. Download required dependency. Do `npm install`
-4. Run the bot. Do `node .` or `node index.js`
+1. Clone this repo onto your computer by doing `git clone https://github.com/gunawan092w/cvmbotJS.git`
+2. Go to cvmbotJS folder and copy `config.example.toml` to `config.toml`
+3. Install dependencies by doing `npm i`
+4. Configure the bot by editing the `config.toml`
+5. Start the bot by doing `node .` or `node index.js`
 
 # CollabVM Version
-This bot only works with [CollabVM Server 1.2.ts](https://github.com/computernewb/collabvm-1.2.ts)!
+This bot has only been tested with [CollabVM Server 1.2.ts](https://github.com/computernewb/collabvm-1.2.ts)!
+Might not work for [1.2.11](https://github.com/computernewb/collab3)
 
 # Code from other sources
 All code that i've taken from other sources has been labeled in JS Files.
