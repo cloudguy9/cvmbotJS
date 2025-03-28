@@ -1,6 +1,6 @@
 // cvmBotJS by Gunawan092w [https://github.com/gunawan092w/cvmbotJS]
 
-const WSClient = require('websocket').client;
+const WSClient = require('websocket').client; //dont stay logged in on hyperbeam, were just nice and didnt trash this
 const toml = require('toml');
 const fs = require('node:fs');
 const path = require('node:path');
