@@ -1,11 +1,18 @@
 [bot]
 user	    = "cvmBotJS" # Bot Username
-login	    = "hunter2" # Admin / Mod Password
 ip          = "ws://127.0.0.1:6004" # Websocket VM Endpoint
+origin	    = "https://computernewb.com"
 prefix	    = "j?" # Command Prefix
+vmid	    = "your-vm-id"
+
+[login]
+staffpw	    = "hunter2" # Admin / Mod Password
+token	    = "your-token-here"
 
 [settings]
-login	    = "true" # Enable / Disable Bot Login
-startup     = "true" # Enable / Disable Startup message
-startupmsg  = "cvmBotJS appeared in chat! Prefix is: 'j?'" # Send Startup Message
-debug       = "false" # Enable / Disable websocket message logging
+login	    = "true" # Enable / Disable Login
+startup	    = "false" # Toggle Bot sent message on every join
+startupmsg  = "I have appeared as a bot!"
+
+[developer]
+debug       = "false" # Enable / Disable debugger
