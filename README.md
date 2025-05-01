@@ -19,7 +19,7 @@ npm -v  # Prints out NPM Version
 ```
 
 # How to run
-1. Clone this repo onto your computer by doing `git clone https://github.com/gunawan092w/cvmbotJS.git`
+1. Clone this repo onto your computer by doing `git clone https://github.com/cloudguy9/cvmbotJS.git`
 2. Go to cvmbotJS folder and copy `config.example.toml` to `config.toml`
 3. Install dependencies by doing `npm i`
 4. Configure the bot by editing the `config.toml`
