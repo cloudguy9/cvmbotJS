@@ -1,6 +1,8 @@
 # cvmbotJS
 A CollabVM Bot written in Javascript
 
+> [!IMPORTANT]
+> Developement has been paused and will be likely to be continued once collabvm 3.0 has released.
 ## Dependencies
 cvmbotJS requires the following dependency to be installed onto your computer:
 1. nodeJS (Required - LTS Recommended)
